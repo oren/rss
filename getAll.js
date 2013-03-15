@@ -13,7 +13,8 @@ module.exports = function(feedUrl, cb) {
   function callback (article) {
     i += 1;
     if (i<10) {
-      posts.push(JSON.stringify(article));
+      // posts.push(article);
+      posts.push({link: article.link, title: article.title, guid: article.guid});
     } else {
       cb(null, {type: 'all', posts: posts });
     };
@@ -21,7 +22,11 @@ module.exports = function(feedUrl, cb) {
 
   function callback2 (meta, articles) {
     // console.log('articles', articles);
-    cb(null, {type: 'all', posts: articles });
+    articles.forEach(function (article) {
+      posts.push({link: article.link, title: article.title, guid: article.guid});
+    });
+
+    cb(null, {type: 'all', posts: posts });
   }
 
   reqObj = { 'uri': feedUrl,
@@ -31,7 +36,6 @@ module.exports = function(feedUrl, cb) {
              };
 
   request(reqObj, function (err, response, body) {
-    // feedparser.parseString(body).on('article', callback);
     x = feedparser.parseString(body);
     x.on('article', callback);
     x.on('complete', callback2);
