@@ -16,7 +16,7 @@ module.exports = function(feedUrl, cb) {
       // posts.push(article);
       posts.push({link: article.link, title: article.title, guid: article.guid});
     } else {
-      cb(null, {type: 'all', posts: posts });
+      cb(null, {url: feedUrl, type: 'all', posts: posts });
     };
   }
 
@@ -26,7 +26,7 @@ module.exports = function(feedUrl, cb) {
       posts.push({link: article.link, title: article.title, guid: article.guid});
     });
 
-    cb(null, {type: 'all', posts: posts });
+    cb(null, {url: feedUrl, type: 'all', posts: posts });
   }
 
   reqObj = { 'uri': feedUrl,

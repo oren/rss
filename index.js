@@ -29,30 +29,29 @@ var environment = process.env.NODE_ENV || 'development';
 var config = require('./config/' + environment + '.js');
 var getUnread = require('./getUnread.js');
 
-var feeds = ['foo.com', 'bar.com'];
-var all = [];
-var read = [];
-var unread = [];
-var count = 0;
+var feeds = {
+  'http://cyber.law.harvard.edu/rss/examples/rss2sample.xml': {count: 0}, 
+  'http://www.alistapart.com/site/rss" htmlUrl="http://alistapart.com': {count: 0},
+  'http://feeds.feedburner.com/VirtuousCode?format=xml': {count: 0}
+};
 
-feeds.forEach(function(feedUrl) {
-  config.getAll(feedUrl, done); // http call
-  config.getRead(feedUrl, config.db, done); // db call
+Object.keys(feeds).forEach(function(url, value) {
+  config.getAll(url, done); // http call
+  config.getRead(url, config.db, done); // db call
 });
 
 function done(err, res) {
-  count += 1;
+  feeds[res.url].count += 1;
+
   if (res.type === 'all') {
-    all = res.posts; 
+    feeds[res.url].all = res.posts; 
   } else {
-    read = res.posts; 
+    feeds[res.url].read = res.posts; 
   };
 
   // both callbacks were called
-  if (count === 2) {
-    unread = getUnread(all, read); // memory
-    console.log('all', all);
-    console.log('read', read);
-    console.log('unread', unread);
+  if (feeds[res.url].count === 2) {
+    feeds[res.url].unread= getUnread(feeds[res.url].all, feeds[res.url].read); // memory
+    console.log('feeds', feeds[res.url]);
   }; 
 }
