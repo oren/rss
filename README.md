@@ -1,4 +1,3 @@
-rss
-===
+# RSS Reader
 
-RSS Reader
+NODE_ENV=test node index.js
