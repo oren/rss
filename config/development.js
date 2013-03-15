@@ -6,3 +6,5 @@ var config = {
   getAll: require('../getAll.js'),
   getRead: require('../getRead.js')
 }
+
+module.exports = config;

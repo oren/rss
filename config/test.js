@@ -6,3 +6,6 @@ var config = {
   getAll: require('../mock-getAll.js'),
   getRead: require('../mock-getRead.js')
 }
+
+module.exports = config;
+
