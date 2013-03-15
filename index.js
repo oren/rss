@@ -52,6 +52,6 @@ function done(err, res) {
   // both callbacks were called
   if (feeds[res.url].count === 2) {
     feeds[res.url].unread= getUnread(feeds[res.url].all, feeds[res.url].read); // memory
-    console.log('feeds', feeds[res.url]);
+    console.log('feeds', feeds[res.url].read);
   }; 
 }

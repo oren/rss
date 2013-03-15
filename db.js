@@ -2,6 +2,6 @@
 
 // access the DB and return array of read urls
 
-module.exports = function(feedUrl) {
+module.exports = function(feedUrl, cb) {
   cb(null, ['foo.com/1', 'foo.com/2']);
 };
