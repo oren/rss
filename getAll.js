@@ -1,61 +1,74 @@
 "use strict";
 
-// get the recent 10 blog posts of a given feed
-// the posts are returned as an array in the callback which looks like this:
-// [   
-//   { link: 'http://devblog.avdi.org/2013/03/11/rubytapas-freebie-streaming/',
-//     title: 'RubyTapas Freebie: Streaming',
-//     guid: 'http://devblog.avdi.org/?p=7546' 
-//   },
-//   { link: 'http://devblog.avdi.org/2013/02/18/rubytapas-freebie-blocks-procs-lambdas/',
-//     title: 'RubyTapas Freebie: Blocks, Procs, & Lambdas',
-//     guid: 'http://devblog.avdi.org/?p=7425' 
-//   },
-//   { link: 'http://devblog.avdi.org/2013/01/24/im-sorry-too/',
-//     title: 'I’m sorry too.',
-//     guid: 'http://devblog.avdi.org/?p=6801' 
-//   }
-// ]
+// Get the recent x blog posts of a given feed
+//
+// Parameters: url to rss feed, number of posts to retrieve and callback
+//
+// Returns: the callback's second parameter is an object that looks like this:
+// { 
+//   url: 'http://substack.net/blog.xml',
+//   type: 'all',
+//   posts:[ 
+//     { link: null,
+//        title: 'many things',
+//        guid: 'http://substack.net/many_things' 
+//     },
+//     { link: null,
+//       title: 'how I write modules',
+//       guid: 'http://substack.net/how_I_write_modules' 
+//     }
+//   ]
+// }
 
 // npm packages
 var request = require('request');
 var feedparser = require('feedparser');
 
-var i = 0;
-var posts = [];
-var reqObj = {};
+var postCount = 0;        // we want to stop when we got 10 posts
 var x = null;
+var results = {
+  url: '',
+  type: 'all',
+  posts: []
+};
 
-module.exports = function(feedUrl, cb) {
+module.exports = function(feedUrl, limit, cb) {
   function articleDone (article) {
-    i += 1;
-    if (i<10) {
-      // posts.push(article);
-      posts.push({link: article.link, title: article.title, guid: article.guid});
-    } else {
-      console.log(posts);
+    postCount += 1;
 
-      cb(null, {url: feedUrl, type: 'all', posts: posts });
+    if (postCount <= limit) {
+      results.posts.push({link: article.link, title: article.title, guid: article.guid});
+    } else {
+      x.removeAllListeners(); // if we don't do that the article and done events will still get fired!
+      return cb(null, results);
     };
   }
 
   function feedDone (meta, articles) {
-    // console.log('articles', articles);
     articles.forEach(function (article) {
-      posts.push({link: article.link, title: article.title, guid: article.guid});
+      result.sposts.push({link: article.link, title: article.title, guid: article.guid});
     });
 
-    cb(null, {url: feedUrl, type: 'all', posts: posts });
+    return cb(null, {url: feedUrl, type: 'all', posts: posts });
   }
 
-  reqObj = { 'uri': feedUrl };
+  results.url = feedUrl;
 
-  request(reqObj, function (err, response, body) {
-      x = feedparser.parseString(body);
-    x.on('article', articleDone);
-    x.on('complete', feedDone);
-    x.on('error', function(err) {
-      cb("Error in parsing the rss feed: " + err);
-    });
-  });
+  // request({ 'uri': feedUrl }, function (err, response, body) {
+  //   x = feedparser.parseString(body);
+
+  //   x.on('article', articleDone); // fired on each blog post
+  //   x.on('complete', feedDone);
+  //   x.on('error', function(err) {
+  //     return cb("Error in parsing the rss feed: " + err);
+  //   });
+  // });
+
+  request({ 'uri': feedUrl }).pipe(feedparser.stream);
+  // feedparser.on('article', articleDone); // fired on each blog post
+  // feedparser.on('complete', feedDone);
+  // feedparser.on('error', function(err) {
+  //   return cb("Error in parsing the rss feed: " + err);
+  // });
+
 };
