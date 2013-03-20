@@ -54,21 +54,12 @@ module.exports = function(feedUrl, limit, cb) {
 
   results.url = feedUrl;
 
-  // request({ 'uri': feedUrl }, function (err, response, body) {
-  //   x = feedparser.parseString(body);
+  x = feedparser.parseStream(request({'uri': feedUrl}))
 
-  //   x.on('article', articleDone); // fired on each blog post
-  //   x.on('complete', feedDone);
-  //   x.on('error', function(err) {
-  //     return cb("Error in parsing the rss feed: " + err);
-  //   });
+    x.on('article', articleDone); // fired on each blog post
+    x.on('complete', feedDone);
+    x.on('error', function(err) {
+      return cb("Error in parsing the rss feed: " + err);
+    });
   // });
-
-  request({ 'uri': feedUrl }).pipe(feedparser.stream);
-  // feedparser.on('article', articleDone); // fired on each blog post
-  // feedparser.on('complete', feedDone);
-  // feedparser.on('error', function(err) {
-  //   return cb("Error in parsing the rss feed: " + err);
-  // });
-
 };
