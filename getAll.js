@@ -56,10 +56,9 @@ module.exports = function(feedUrl, limit, cb) {
 
   x = feedparser.parseStream(request({'uri': feedUrl}))
 
-    x.on('article', articleDone); // fired on each blog post
-    x.on('complete', feedDone);
-    x.on('error', function(err) {
-      return cb("Error in parsing the rss feed: " + err);
-    });
-  // });
+  x.on('article', articleDone); // fired on each blog post
+  x.on('complete', feedDone);
+  x.on('error', function(err) {
+    return cb("Error in parsing the rss feed: " + err);
+  });
 };

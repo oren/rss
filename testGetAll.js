@@ -12,7 +12,8 @@ var get = require('./getAll.js');
 //   }
 // });
 
-get('http://substack.net/blog.xml', 3, function(err, data) {
+// get('http://substack.net/blog.xml', 3, function(err, data) {
+get('http://engineering.yp.com/rss.xml', 3, function(err, data) {
   if (err) {
     console.log(err);
   } else {
