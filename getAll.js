@@ -7,7 +7,6 @@
 // Returns: the callback's second parameter is an object that looks like this:
 // { 
 //   url: 'http://substack.net/blog.xml',
-//   type: 'all',
 //   posts:[ 
 //     { link: null,
 //        title: 'many things',
@@ -26,17 +25,23 @@ var feedparser = require('feedparser');
 
 var postCount = 0;        // we want to stop when we got 10 posts
 var x = null;
+var requestOptions = {};
 var results = {
   url: '',
-  type: 'all',
   posts: []
 };
 
-module.exports = function(feedUrl, limit, cb) {
+module.exports = function(options, cb) {
+  results.url = options.uri;
+  requestOptions = {
+    'uri': options.uri, 
+    'headers': { 'If-Modified-Since': options['If-Modified-Since'] }
+  };
+
   function articleDone (article) {
     postCount += 1;
 
-    if (postCount <= limit) {
+    if (postCount <= options.limit) {
       results.posts.push({link: article.link, title: article.title, guid: article.guid});
     } else {
       x.removeAllListeners(); // if we don't do that the article and done events will still get fired!
@@ -45,19 +50,16 @@ module.exports = function(feedUrl, limit, cb) {
   }
 
   function feedDone (meta, articles) {
-    articles.forEach(function (article) {
-      result.sposts.push({link: article.link, title: article.title, guid: article.guid});
-    });
-
-    return cb(null, {url: feedUrl, type: 'all', posts: posts });
+    return cb(null, results);
   }
 
-  results.url = feedUrl;
-
-  x = feedparser.parseStream(request({'uri': feedUrl}))
+  x = feedparser.parseUrl(requestOptions)
 
   x.on('article', articleDone); // fired on each blog post
   x.on('complete', feedDone);
+  x.on('304', function() { // fired if no new blog posts
+    return cb(null, results);
+  });
   x.on('error', function(err) {
     return cb("Error in parsing the rss feed: " + err);
   });
