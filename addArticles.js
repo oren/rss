@@ -22,6 +22,9 @@ module.exports = function(site, articles, cb) {
   articles.forEach(function(url, index) {
     lastArticle = ((index + 1) === numOfArticles);
 
+    // without this function lastArticle will be true since sismember is async and executed
+    // later on. by creating a clojure we keep lastArticle's correct value.
+    // http://book.mixu.net/ch4.html - example 2 and 4
     (function(lastArticle) {
       client.sismember(site + ':read', url, function (err, articleFound) {
         if (articleFound) {
