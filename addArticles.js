@@ -38,7 +38,6 @@ module.exports = function(site, articles, cb) {
           client.sadd(site + ':unread', url, function (err, value) {
             client.smembers(site + ':unread', function (err, unread) {
               if (lastArticle) {
-                console.log('article not found in read');
                 return cb(null, unread); 
               }
             });
