@@ -1,3 +1,45 @@
+db 
+--
+(sets)
+SADD feeds substack.com reddit.com/node
+
+(hash)
+HMSET feed:substack.com update 'Tue, 19 Mar 2013 10:41:11 GMT'
+
+(sets)
+SADD substuck.com substack.com/post1.html substack.com/post2.html
+substack.com:unread
+  substack.com/post1.html
+  substack.com/post2.html
+reddit.com/node:unread
+  reddit.com/node/post1.html
+  
+flow
+----
+get substack feed - getAll(substack.com)
+  substuck.com/post1.html
+  substuck.com/post2.html
+  substuck.com/post3.html
+
+add unread posts to db -db.addPosts('substack.com', 'substuck.com/post1.html', 'substuck.com/post2.html', 'substuck.com/post3.html')
+SADD substuck.com:unread sabstuck.com/post1.html sabstuck.com/post2.html substack.com/post3.html
+
+ui
+--
+substack 3
+
+read post2 - readPost('substack.com', 'substuck.com/post2.html')
+SADD substuck.com:read sabstuck.com/post1.html sabstuck.com/post2.html substack.com/post3.html
+
+substack 2
+
+get substack feed
+
+
+
+
+
+
 // user actions
 // add feed
 // delete feed

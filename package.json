@@ -1,0 +1,22 @@
+{
+  "name": "rss",
+  "version": "0.0.0",
+  "description": "NODE_ENV=test node index.js",
+  "main": "index.js",
+  "dependencies": {
+    "feedparser": "~0.13.2",
+    "request": "~2.16.2",
+    "redis": "~0.8.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/oren/rss.git"
+  },
+  "author": "",
+  "license": "BSD",
+  "readmeFilename": "README.md"
+}

@@ -1,7 +1,7 @@
 var get = require('./getAll.js');
 
 var options = {
-  'uri': 'http://shawn.dahlen.me/atom.xml',
+  'uri': 'http://substack.net/blog.xml',
   'If-Modified-Since': 'Tue, 19 Mar 2013 10:41:11 GMT',
   'limit': 3
 };

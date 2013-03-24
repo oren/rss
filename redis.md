@@ -4,15 +4,21 @@ flushall
 ## delete all keys in current db
 flushdb
 
-## feeds set
+## add feed update time (hash)
+HMSET feed:foo.com update 'Tue, 19 Mar 2013 10:41:11 GMT'
+
+## get feed update time
+HGETALL feed:foo.com
+
+## add feeds (set)
 SADD feeds foo.com bar.com aaa.com
 SMEMBERS feeds
 1) "aaa.com"
 2) "foo.com"
 3) "bar.com"
 
-## feed set
-ADD foo.com foo.com/1 foo.com/2 foo.com/3
+## add urls to feed (set)
+SADD foo.com foo.com/1 foo.com/2 foo.com/3
 
 SMEMBERS foo.com
 1) "foo.com/3"
