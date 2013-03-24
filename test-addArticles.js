@@ -1,4 +1,4 @@
-var add = require('./addArticles.js');
+var add = require('./addArticles2.js');
 
 var articles = [
   'http://substack.net/how_I_write_modules',
