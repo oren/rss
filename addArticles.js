@@ -27,16 +27,20 @@ module.exports = function(site, articles, cb) {
     // http://book.mixu.net/ch4.html - example 2 and 4
     (function(lastArticle) {
       client.sismember(site + ':read', url, function (err, articleFound) {
+        if (err) { return cb(err); }
         if (articleFound) {
           if (lastArticle) {
             client.smembers(site + ':unread', function (err, unread) {
+              if (err) { return cb(err); }
               return cb(null, unread); 
             });
           }
         } else {
           // insert to unread set
           client.sadd(site + ':unread', url, function (err, value) {
+            if (err) { return cb(err); }
             client.smembers(site + ':unread', function (err, unread) {
+              if (err) { return cb(err); }
               if (lastArticle) {
                 return cb(null, unread); 
               }
