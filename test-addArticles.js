@@ -9,7 +9,7 @@ add('http://substack.net/blog.xml', articles, function(err, unread) {
   if (err) {
     console.log('error', err);
   } else {
-    console.log('success', unread);
+    console.log('unread articles:', unread);
   }
 });
 
